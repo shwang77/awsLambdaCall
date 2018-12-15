@@ -1,0 +1,130 @@
+---
+interactionModel:
+  languageModel:
+    invocationName: s. b. a.
+    types: []
+    intents:
+    - name: AMAZON.CancelIntent
+      samples: []
+    - name: AMAZON.HelpIntent
+      samples:
+      - help
+    - name: AMAZON.StopIntent
+      samples: []
+    - name: UnderstandTerminologyIntent
+      slots:
+      - name: term
+        type: AMAZON.SearchQuery
+      samples:
+      - I don't know {term}
+      - I don't what {term} means
+      - I don't know what {term} is
+      - I don't know what a {term} is
+      - what is {term}
+      - what {term} means
+      - what does {term} mean
+      - tell me what {term} means
+      - define {term}
+      - lookup {term}
+      - lookup the definion of {term}
+      - what's the definition of {term}
+    - name: AmIASmallBusinessIntent
+      slots:
+      - name: naics_code
+        type: AMAZON.NUMBER
+        samples:
+        - "{naics_code}"
+        - my industry code is {naics_code}
+      - name: naics_industry_description
+        type: AMAZON.NUMBER
+      - name: employee_count
+        type: AMAZON.NUMBER
+        samples:
+        - "{employee_count}"
+        - "{employee_count} employees"
+        - "{employee_count} people"
+        - "{employee_count} staff"
+        - I have {employee_count} employees
+        - I have {employee_count} people
+        - I have {employee_count} staff
+        - I employ {employee_count} employees
+        - I employ {employee_count} people
+        - I employ {employee_count} staff
+      - name: annual_receipts
+        type: AMAZON.NUMBER
+        samples:
+        - "{annual_receipts}"
+        - "{annual_receipts} dollars"
+        - "{annual_receipts} bucks"
+        - "{annual_receipts} in annual receipts"
+        - "{annual_receipts} in revenue"
+        - The amount of annual receipts is {annual_receipts} dollars per year
+      samples:
+      - am I a small business
+      - do I quality as a small business
+      - is a business with code {naics_code} and annual receipts {annual_receipts} and {employee_count} total employees a small business
+  dialog:
+    intents:
+    - name: AmIASmallBusinessIntent
+      confirmationRequired: false
+      slots:
+      - name: naics_code
+        type: AMAZON.NUMBER
+        confirmationRequired: true
+        elicitationRequired: true
+        prompts:
+          confirmation: Confirm.Slot.Naics_1
+          elicitation: Elicit.Slot.Naics_1
+      - name: naics_industry_description
+        type: AMAZON.NUMBER
+        confirmationRequired: false
+        elicitationRequired: false
+      - name: employee_count
+        type: AMAZON.NUMBER
+        confirmationRequired: true
+        elicitationRequired: true
+        prompts:
+          confirmation: Confirm.Slot.EmployeeCount1
+          elicitation: Elicit.Slot.EmployeeCount1
+      - name: annual_receipts
+        type: AMAZON.NUMBER
+        confirmationRequired: true
+        elicitationRequired: true
+        prompts:
+          confirmation: Confirm.Slot.Annualreceipts1
+          elicitation: Elicit.Slot.Annualreceipts1
+  prompts:
+  - id: Elicit.Slot.Naics_1
+    variations:
+    - type: SSML
+      value: <speak>First, I'll need to know the industry your business is in. What is your <phoneme alphabet="ipa" ph="neɪks">NAICS</phoneme> code?</speak>
+    - type: SSML
+      value: <speak>First, I'll need to know the industry your business is in. Could you tell me your <phoneme alphabet="ipa" ph="neɪks">NAICS</phoneme> code?</speak>
+  - id: Elicit.Slot.EmployeeCount1
+    variations:
+    - type: SSML
+      value: <speak>Great! Next, can you tell me how many people are employed by your {naics_industry_description} business?</speak>
+    - type: SSML
+      value: <speak>Great! Next, I'll need to know how many people work for your {naics_industry_description} business. What's the average number of people employed by your business over the last 12 months?</speak>
+    - type: SSML
+      value: <speak>Great! On average, how many people does your {naics_industry_description} business employ?</speak>
+  - id: Elicit.Slot.Annualreceipts1
+    variations:
+      - type: SSML
+        value: <speak>Perfect! Finally, I'll need to know the annual receipts for your {naics_industry_description} business. What amount of revenue does the business generate?</speak>
+      - type: SSML
+        value: <speak>Perfect! Finally, I'll need to know about your {naics_industry_description} business' annual revenue. What is the ammount in annual receipts?</speak>
+      - type: SSML
+        value: <speak>Perfect! Finally, what are the annual receipts for your {naics_industry_description} business?</speak>
+  - id: Confirm.Slot.Naics_1
+    variations:
+    - type: SSML
+      value: <speak>Okay, I heard <say-as interpret-as="digits">{naics_code}</say-as>. Are you in the {naics_industry_description} industry?</speak>
+  - id: Confirm.Slot.EmployeeCount1
+    variations:
+    - type: SSML
+      value: <speak>It sounds like your {naics_industry_description} business employs {employee_count} people, right?</speak>
+  - id: Confirm.Slot.Annualreceipts1
+    variations:
+    - type: SSML
+      value: <speak>Did I hear you say {annual_receipts} dollars?</speak>

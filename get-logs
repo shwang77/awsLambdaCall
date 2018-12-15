@@ -1,0 +1,2 @@
+#!/bin/bash
+awslogs get /aws/lambda/ask-custom-sba-vui-default | grep -v "Duration" | grep -v END | grep -v "START" | cut -f 3

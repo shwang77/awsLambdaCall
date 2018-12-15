@@ -1,0 +1,2 @@
+#!/bin/bash
+yamllint models/en-US.yml && yaml2json -p models/en-US.yml > models/en-US.json && ask deploy --force
